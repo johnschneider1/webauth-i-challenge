@@ -1,9 +1,9 @@
 import React from "react";
 import "./App.css";
-import Form from "./components/Register";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import UserList from "./components/UserList";
 import PrivateRoute from "./components/PrivateRoute";
+import LoginForm from "./components/Login";
 
 function App() {
   return (
@@ -18,9 +18,9 @@ function App() {
           <Link to="/protected">Register</Link>
         </ul>
 
-        <Route path="/login" component={Form} />
+        <Route path="/login" component={LoginForm} />
         <PrivateRoute exact path="/protected" component={UserList} />
-        <h1> form and authentication </h1>
+        {/* <h1> form and authentication </h1> */}
         {/* <Form /> */}
       </div>
     </Router>

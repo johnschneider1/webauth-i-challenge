@@ -3,29 +3,31 @@ import { axiosWithAuth } from "../utils/axiosWIthAuth";
 import User from "./User";
 import Register from "./Register";
 
-const FriendList = props => {
+const UserList = props => {
   console.log("friendlist props:", props);
-  const [friend, setFriend] = useState([]);
+  const [user, setUser] = useState([]);
 
   useEffect(() => {
-    getData();
+    getUsers();
   }, []);
 
-  const getData = () => {
+  const getUsers = () => {
     axiosWithAuth()
-      .get("http://localhost:6500/api/users")
+      .get("http://localhost:6500/api/users", { withCredentials: true })
       .then(res => {
-        setFriend(res.data);
+        setUser(res.data);
         props.history.push("/protected");
       })
       .catch(err => console.error("error here:", err));
   };
 
-  const addFriend = name => {
+  const addUser = name => {
     axiosWithAuth()
-      .post("http://localhost:6500/api/users", name)
+      .post("http://localhost:6500/api/register", name, {
+        withCredentials: true
+      })
       .then(res => {
-        setFriend(res.data);
+        setUser(res.data);
       })
       .catch(err => console.error(err.response));
   };
@@ -33,13 +35,13 @@ const FriendList = props => {
   return (
     <div className="friend-list">
       <h1>list</h1>
-      <Register addFriend={addFriend} />
+      <Register addUser={addUser} />
 
-      {friend.map(friend => (
-        <User key={friend.name} friend={friend} />
+      {user.map(user => (
+        <User key={user.name} user={user} />
       ))}
     </div>
   );
 };
 
-export default FriendList;
+export default UserList;

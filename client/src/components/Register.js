@@ -9,7 +9,7 @@ const Form = props => {
 
   const handleSubmit = e => {
     e.preventDefault();
-    props.addFriend(name);
+    props.addUser(name);
   };
 
   return (

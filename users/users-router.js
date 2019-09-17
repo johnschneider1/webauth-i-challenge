@@ -12,7 +12,7 @@ router.get("/", (req, res) => {
   res.send("It's alive!");
 });
 
-router.post("/", (req, res) => {
+router.post("/register", (req, res) => {
   let { username, password } = req.body;
 
   const hash = bcrypt.hashSync(password, 8); // it's 2 ^ 8, not 8 rounds
@@ -26,13 +26,14 @@ router.post("/", (req, res) => {
     });
 });
 
-router.post("/api/login", (req, res) => {
+router.post("/login", (req, res) => {
   let { username, password } = req.body;
 
   Users.findBy({ username })
     .first()
     .then(user => {
       if (user && bcrypt.compareSync(password, user.password)) {
+        req.session.user = user; // <<<<<<<<<<<<<<<
         res.status(200).json({ message: `Welcome ${user.username}!` });
       } else {
         res.status(401).json({ message: "You cannot pass!" });
@@ -43,7 +44,7 @@ router.post("/api/login", (req, res) => {
     });
 });
 
-router.get("/api/users", restricted, (req, res) => {
+router.get("/users", restricted, (req, res) => {
   Users.find()
     .then(users => {
       res.json(users);
@@ -57,6 +58,22 @@ router.get("/hash", (req, res) => {
   // hash the name
   const hash = bcrypt.hashSync(name, 8); // use bcryptjs to hash the name
   res.send(`the hash for ${name} is ${hash}`);
+});
+
+router.get("/logout", (req, res) => {
+  if (req.session) {
+    req.session.destroy(error => {
+      if (error) {
+        res.status(500).json({
+          message: "you can check out anytime you like, but you can never leave"
+        });
+      } else {
+        res.status(200).json({ message: "bye" });
+      }
+    });
+  } else {
+    res.status(200).json({ message: "already logged out" });
+  }
 });
 
 module.exports = router;

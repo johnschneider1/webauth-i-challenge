@@ -13,7 +13,7 @@ const LoginForm = props => {
   const login = e => {
     e.preventDefault();
     axios
-      .post("http://localhost:6500/api/login", form)
+      .post("http://localhost:6500/api/login", form, { withCredentials: true })
       .then(res => {
         localStorage.setItem("token", res.data.payload);
         props.history.push("/protected");
